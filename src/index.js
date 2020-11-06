@@ -138,7 +138,7 @@ app.get('/book/:bookId', async (req, res) => {
       });
     },
     'application/json': () => {
-      res.json({});
+      res.json(jsonResponse);
     },
     default: () => {
       res.status(500).render('error', { error: err });
