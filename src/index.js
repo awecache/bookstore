@@ -4,7 +4,11 @@ const express = require('express');
 const handlebars = require('express-handlebars');
 const mysql = require('mysql2/promise');
 const { mkQuery } = require('./utils');
-const { SQL_BOOKS_BY_FIRST_LETTER, SQL_BOOK_COUNT } = require('./sqlQuery');
+const {
+  SQL_BOOKS_BY_FIRST_LETTER,
+  SQL_BOOK_COUNT,
+  SQL_BOOK_BY_ID
+} = require('./sqlQuery');
 const { off } = require('process');
 
 // create the database connection pool
@@ -73,7 +77,7 @@ app.get('/books/:letter', async (req, res) => {
     offset
   ]);
 
-  // console.log('boolist', books);
+  console.log('boolist', books);
   // console.log('book count', bookCount);
 
   //pagination
@@ -90,6 +94,24 @@ app.get('/books/:letter', async (req, res) => {
     hasNext: !!nextPage,
     prevPage,
     nextPage
+  });
+});
+
+app.get('/book/:bookId', async (req, res) => {
+  const bookId = req.params.bookId;
+
+  const getBookById = mkQuery(SQL_BOOK_BY_ID, pool);
+
+  const book = (await getBookById([bookId]))[0];
+
+  const authors = book.authors.split('|').join(', ');
+
+  const genres = book.genres.split('|').join(', ');
+
+  res.render('book', {
+    book,
+    authors,
+    genres
   });
 });
 

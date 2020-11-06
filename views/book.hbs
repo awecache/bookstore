@@ -1,0 +1,26 @@
+<div class="container">
+   <div class="row">
+    <div class="col d-flex flex-column">
+      <img src="{{book.image_url}}" class="rounded float-left" alt="...">
+      <div class=" book-details">
+          <div>Pages: {{book.pages}}</div>
+          <div>Rating: {{book.rating}} ({{book.rating_count}})</div>
+          <div>Genres: {{genres}}</div>
+
+      </div>
+      
+
+    </div>
+    <div class="col">
+        
+      <h2>{{book.title}}</h2>
+      <div>by {{authors}}</div>
+      <div>{{book.description}}</div>
+
+     <div class="pt-3">
+         <a href="/"><button type="button" class="btn btn-primary">Find Review</button> </a> 
+     </div>
+    </div>   
+    
+  </div>
+</div>

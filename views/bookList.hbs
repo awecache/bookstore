@@ -5,7 +5,7 @@
         <tbody>
           <div class="list-group">
             {{#each books}}
-              <a href="#" class="list-group-item list-group-item-action ">
+              <a href="/book/{{this.book_id}}" class="list-group-item list-group-item-action ">
                 {{this.title}}
               </a>
             {{/each}}
