@@ -2,6 +2,7 @@
    <div class="row">
      <div class="col d-flex flex-column">
          <h2>Book Review</h2>
+         {{#if hasReview}}
          {{#each reviews}}
          <h3>review.book_title</h3>
          <div>by {{this.book_author}}</div>
@@ -17,6 +18,9 @@
          <div>
               {{copyright}}
          </div>
+         {{else}}
+         <div> No review found</div>
+         {{/if}}
         
      </div>
     

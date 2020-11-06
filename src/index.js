@@ -157,11 +157,6 @@ app.get('/review', async (req, res) => {
   const reviews = response.results;
   const copyright = response.copyright;
 
-  if (!numReview) {
-    res.send('<div> No Review. Please find anthor book for review</div>');
-    return;
-  }
-
-  res.render('review', { reviews, copyright });
+  res.render('review', { reviews, copyright, hasReview: !!numReview });
 });
 startApp(app, pool);
