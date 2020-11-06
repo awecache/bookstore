@@ -114,8 +114,6 @@ app.get('/book/:bookId', async (req, res) => {
   const genres = book.genres.split('|');
   const genresStr = genres.join(', ');
 
-  const contentType = req.get('Content-Type');
-
   const jsonResponse = {
     bookId: book.book_id,
     title: book.title,
@@ -139,7 +137,7 @@ app.get('/book/:bookId', async (req, res) => {
       res.json(jsonResponse);
     },
     default: () => {
-      res.status(500).render('error', { error: err });
+      res.status(500).render('Please check your content-type', { error: err });
     }
   });
 });
