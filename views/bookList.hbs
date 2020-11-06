@@ -1,12 +1,44 @@
-<div class="container">
-   <div class="row">
-    <div class="col">
-      <img src="" class="rounded float-left" alt="...">
-    </div>
-    <div class="col">
-      <h2>{{}}</h2>
-      {{}}
-     <a href="/"><button type="button" class="btn btn-primary">Back</button> </a> 
-    </div>   
-  </div>
-</div>
+{{#if hasResult}}
+    <h2>Letter {{letter}}</h2>
+    <table>
+        
+        <tbody>
+          <div class="list-group">
+            {{#each books}}
+              <a href="#" class="list-group-item list-group-item-action ">
+                {{this.title}}
+              </a>
+            {{/each}}
+  
+          </div>
+
+            <!-- navigation buttons -->
+            <tr>
+                <td>
+                    <form method="GET" action="/books/{{letter}}">
+                        <input type="hidden" name="page" value={{ prevPage }}>
+                        {{#if hasPrev}}
+                        <button type="submit">Previous</button>
+                        {{else}}
+                        <button type="submit" disabled>Previous</button>
+                        {{/if}}
+                    </form>
+                </td>
+                <td>
+                    <form method="GET" action="/books/{{letter}}">
+                        <input type="hidden" name="page" value={{ nextPage }}>
+                        {{#if hasNext}}
+                        <button type="submit">Next</button>
+                        {{else}}
+                        <button type="submit" disabled>Next</button>
+                        {{/if}}
+                    </form>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+
+{{else}}
+    <h2>No book starting with "{{letter}}" found</h2>
+{{/if}}
