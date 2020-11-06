@@ -3,9 +3,14 @@
   height: 2rem;
 }
 
-.navigation-bar ul {
+ul.navi {
   list-style-type: none;
   margin: 0;
   padding: 0;
   margin-bottom: 2rem;
+}
+
+ul.navi li.navi,
+ul.navi a.navi-link:hover {
+  text-decoration: none;
 }
