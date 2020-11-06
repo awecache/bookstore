@@ -84,9 +84,6 @@ app.get('/books/:letter', async (req, res) => {
     offset
   ]);
 
-  // console.log('boolist', books);
-  // console.log('book count', bookCount);
-
   //pagination
   const totalPages = Math.ceil(bookCount / limit);
   const prevPage = page > 1 ? page - 1 : undefined;
@@ -111,14 +108,41 @@ app.get('/book/:bookId', async (req, res) => {
 
   const book = (await getBookById([bookId]))[0];
 
-  const authors = book.authors.split('|').join(', ');
+  const authors = book.authors.split('|');
+  const authorsStr = authors.join(', ');
 
-  const genres = book.genres.split('|').join(', ');
+  const genres = book.genres.split('|');
+  const genresStr = genres.join(', ');
 
-  res.render('book', {
-    book,
+  const contentType = req.get('Content-Type');
+
+  const jsonResponse = {
+    bookId: book.book_id,
+    title: book.title,
     authors,
+    summary: book.description,
+    pages: book.pages,
+    rating: book.rating,
+    ratingCount: book.rating_count,
     genres
+  };
+
+  console.log('Book: ', jsonResponse);
+
+  res.format({
+    'text/html': () => {
+      res.render('book', {
+        book,
+        authors: authorsStr,
+        genres: genresStr
+      });
+    },
+    'application/json': () => {
+      res.json({});
+    },
+    default: () => {
+      res.status(500).render('error', { error: err });
+    }
   });
 });
 
@@ -136,14 +160,11 @@ app.get('/review', async (req, res) => {
   const numReview = response.num_results;
   const reviews = response.results;
   const copyright = response.copyright;
-  // console.log('book title: ', title);
-  // console.log('endpoint', queryEndpoint);
+
   if (!numReview) {
     res.send('<div> No Review. Please find anthor book for review</div>');
     return;
   }
-  console.log('review:', reviews);
-  console.log('response: ', response);
 
   res.render('review', { reviews, copyright });
 });
