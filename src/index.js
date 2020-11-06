@@ -127,8 +127,6 @@ app.get('/book/:bookId', async (req, res) => {
     genres
   };
 
-  console.log('Book: ', jsonResponse);
-
   res.format({
     'text/html': () => {
       res.render('book', {
