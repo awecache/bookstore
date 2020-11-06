@@ -1,0 +1,21 @@
+  <div class="row row-cols-5">
+      {{#each alphabets}}
+        <div class="col landing">
+          <a href="{{../baseUrl}}/books/{{this}}">
+            <button type="button" class="btn btn-primary mb-2 alphabets" ><h5>{{this}}</h2></button>
+          </a>
+        </div>
+      {{/each}}
+      
+  </div>
+ 
+  
+  <div class="row row-cols-5">
+      {{#each numbers}}
+        <div class="col landing">
+          <a href="{{../baseUrl}}/books/{{this}}">
+            <button type="button" class="btn btn-secondary mb-2 numbers" ><h5>{{this}}</h2></button>
+          </a>
+        </div>
+      {{/each}}
+  </div>
