@@ -75,30 +75,34 @@ app.get('/books/:letter', async (req, res) => {
   const page = parseInt(req.query.page) || 1;
   const offset = (page - 1) * limit;
 
-  const bookCount = (await getBookCount([`${letter}%`]))[0].count;
-  const books = await listBookByFirstLetter([
-    `${letter}%`,
-    'title',
-    'ASC',
-    limit,
-    offset
-  ]);
+  try {
+    const bookCount = (await getBookCount([`${letter}%`]))[0].count;
+    const books = await listBookByFirstLetter([
+      `${letter}%`,
+      'title',
+      'ASC',
+      limit,
+      offset
+    ]);
 
-  //pagination
-  const totalPages = Math.ceil(bookCount / limit);
-  const prevPage = page > 1 ? page - 1 : undefined;
-  const nextPage = page < totalPages ? page + 1 : undefined;
+    //pagination
+    const totalPages = Math.ceil(bookCount / limit);
+    const prevPage = page > 1 ? page - 1 : undefined;
+    const nextPage = page < totalPages ? page + 1 : undefined;
 
-  res.render('bookList', {
-    books,
-    letter,
-    hasResult: !!bookCount,
-    page,
-    hasPrev: !!prevPage,
-    hasNext: !!nextPage,
-    prevPage,
-    nextPage
-  });
+    res.render('bookList', {
+      books,
+      letter,
+      hasResult: !!bookCount,
+      page,
+      hasPrev: !!prevPage,
+      hasNext: !!nextPage,
+      prevPage,
+      nextPage
+    });
+  } catch (err) {
+    return Promise.reject(err);
+  }
 });
 
 app.get('/book/:bookId', async (req, res) => {
@@ -106,40 +110,46 @@ app.get('/book/:bookId', async (req, res) => {
 
   const getBookById = mkQuery(SQL_BOOK_BY_ID, pool);
 
-  const book = (await getBookById([bookId]))[0];
+  try {
+    const book = (await getBookById([bookId]))[0];
 
-  const authors = book.authors.split('|');
-  const authorsStr = authors.join(', ');
+    const authors = book.authors.split('|');
+    const authorsStr = authors.join(', ');
 
-  const genres = book.genres.split('|');
-  const genresStr = genres.join(', ');
+    const genres = book.genres.split('|');
+    const genresStr = genres.join(', ');
 
-  const jsonResponse = {
-    bookId: book.book_id,
-    title: book.title,
-    authors,
-    summary: book.description,
-    pages: book.pages,
-    rating: book.rating,
-    ratingCount: book.rating_count,
-    genres
-  };
+    const jsonResponse = {
+      bookId: book.book_id,
+      title: book.title,
+      authors,
+      summary: book.description,
+      pages: book.pages,
+      rating: book.rating,
+      ratingCount: book.rating_count,
+      genres
+    };
 
-  res.format({
-    'text/html': () => {
-      res.render('book', {
-        book,
-        authors: authorsStr,
-        genres: genresStr
-      });
-    },
-    'application/json': () => {
-      res.json(jsonResponse);
-    },
-    default: () => {
-      res.status(500).render('Please check your content-type', { error: err });
-    }
-  });
+    res.format({
+      'text/html': () => {
+        res.render('book', {
+          book,
+          authors: authorsStr,
+          genres: genresStr
+        });
+      },
+      'application/json': () => {
+        res.json(jsonResponse);
+      },
+      default: () => {
+        res
+          .status(500)
+          .render('Please check your content-type', { error: err });
+      }
+    });
+  } catch (err) {
+    return Promise.reject({ err });
+  }
 });
 
 app.get('/review', async (req, res) => {
@@ -151,12 +161,16 @@ app.get('/review', async (req, res) => {
     'api-key': process.env.API_KEY
   });
 
-  const results = await fetch(queryEndpoint, { method: 'get' });
-  const response = await results.json();
-  const numReview = response.num_results;
-  const reviews = response.results;
-  const copyright = response.copyright;
+  try {
+    const results = await fetch(queryEndpoint, { method: 'get' });
+    const response = await results.json();
+    const numReview = response.num_results;
+    const reviews = response.results;
+    const copyright = response.copyright;
 
-  res.render('review', { reviews, copyright, hasReview: !!numReview });
+    res.render('review', { reviews, copyright, hasReview: !!numReview });
+  } catch (err) {
+    return Promise.reject({ err });
+  }
 });
 startApp(app, pool);
