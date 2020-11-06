@@ -1,0 +1,24 @@
+<div class="container">
+   <div class="row">
+     <div class="col d-flex flex-column">
+         <h2>Book Review</h2>
+         {{#each reviews}}
+         <h3>review.book_title</h3>
+         <div>by {{this.book_author}}</div>
+         <div>Reviewer: {{this.byline}}</div>
+         <div>Date: {{this.publication_dt}}</div>
+         <div>{{this.summary}}</div>
+         <div class="d-flex flex-row-reverse ">
+             <a href="{{this.url}}">Full Review</a>
+         </div>
+
+
+         {{/each}}
+         <div>
+              {{copyright}}
+         </div>
+        
+     </div>
+    
+  </div>
+</div>

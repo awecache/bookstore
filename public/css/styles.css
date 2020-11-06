@@ -2,3 +2,10 @@
   width: 4rem;
   height: 2rem;
 }
+
+.navigation-bar ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  margin-bottom: 2rem;
+}

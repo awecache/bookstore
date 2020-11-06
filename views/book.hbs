@@ -18,7 +18,10 @@
       <div>{{book.description}}</div>
 
      <div class="pt-3">
-         <a href="/"><button type="button" class="btn btn-primary">Find Review</button> </a> 
+         <form action="/review" method="GET">
+         <input type="hidden" name="title" value="{{book.title}}" >
+         <button type="submit" class="btn btn-primary">Find Review</button>
+         </form>
      </div>
     </div>   
     

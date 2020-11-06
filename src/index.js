@@ -3,7 +3,12 @@ const path = require('path');
 const express = require('express');
 const handlebars = require('express-handlebars');
 const mysql = require('mysql2/promise');
+const fetch = require('node-fetch');
+const withQuery = require('with-query').default;
+const morgan = require('morgan');
+
 const { mkQuery } = require('./utils');
+
 const {
   SQL_BOOKS_BY_FIRST_LETTER,
   SQL_BOOK_COUNT,
@@ -47,6 +52,8 @@ const app = express();
 app.engine('hbs', handlebars({ defaultLayout: 'default.hbs' }));
 app.set('view engine', 'hbs');
 
+app.use(morgan('combined'));
+
 app.use('/static', express.static(path.join(__dirname, '..', 'public')));
 
 const PORT = parseInt(process.argv[2]) || parseInt(process.env.PORT) || 3000;
@@ -77,7 +84,7 @@ app.get('/books/:letter', async (req, res) => {
     offset
   ]);
 
-  console.log('boolist', books);
+  // console.log('boolist', books);
   // console.log('book count', bookCount);
 
   //pagination
@@ -115,7 +122,29 @@ app.get('/book/:bookId', async (req, res) => {
   });
 });
 
+app.get('/review', async (req, res) => {
+  const title = req.query.title.trim();
+  const apiRootUri = 'https://api.nytimes.com/svc/books/v3';
+  const reviewQueryUri = `${apiRootUri}/reviews.json`;
+  const queryEndpoint = withQuery(reviewQueryUri, {
+    title,
+    'api-key': process.env.API_KEY
+  });
+
+  const results = await fetch(queryEndpoint, { method: 'get' });
+  const response = await results.json();
+  const numReview = response.num_results;
+  const reviews = response.results;
+  const copyright = response.copyright;
+  // console.log('book title: ', title);
+  // console.log('endpoint', queryEndpoint);
+  if (!numReview) {
+    res.send('<div> No Review. Please find anthor book for review</div>');
+    return;
+  }
+  console.log('review:', reviews);
+  console.log('response: ', response);
+
+  res.render('review', { reviews, copyright });
+});
 startApp(app, pool);
-// app.listen(PORT, () => {
-//   console.log(`Listening to port ${PORT}`);
-// });
