@@ -142,9 +142,7 @@ app.get('/book/:bookId', async (req, res) => {
         res.json(jsonResponse);
       },
       default: () => {
-        res
-          .status(500)
-          .render('Please check your content-type', { error: err });
+        res.status(406).send('Not Acceptable');
       }
     });
   } catch (err) {

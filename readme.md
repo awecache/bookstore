@@ -7,5 +7,6 @@ DB_USER
 DB_PASSWORD
 DB_NAME
 DB_PORT
+API_KEY
 
-RUN npm run start to Run express server for serve my BookStore
+RUN npm run start to run express server
